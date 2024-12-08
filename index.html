@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Adopt a Ghost - Ghost1.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'MedievalSharp', cursive;
+            /* Haunting-themed background pattern overlay */
+            background: linear-gradient(to bottom, #1e1e2e, #0f0f1a),
+                        url('https://example.com/subtle-haunting-pattern.png');
+            background-repeat: repeat;
+            background-size: cover;
+            background-blend-mode: multiply;
+            color: #e8d4a2;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hero {
+            padding: 40px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            color: #c4a46c;
+            text-shadow: 3px 3px 5px #000;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+
+        .hero .links {
+            margin-top: 20px;
+        }
+
+        .hero a {
+            color: #c4a46c;
+            text-decoration: none;
+            font-size: 1.2em;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+
+        /* Add a ghost emoji before navigation links */
+        .hero a[href="#how-it-works"]::before {
+            content: "👻 ";
+        }
+        .hero a[href="#ghost-lore"]::before {
+            content: "👻 ";
+        }
+
+        .hero a:hover {
+            color: #d4af37;
+        }
+
+        .generator {
+            margin: 30px 0;
+            padding: 20px;
+            background: #2e2e3e;
+            border: 2px solid #c4a46c;
+            border-radius: 15px;
+            display: inline-block;
+        }
+
+        .generator input {
+            font-size: 1.2em;
+            padding: 10px;
+            width: 300px;
+            margin: 10px;
+            border-radius: 10px;
+            border: 1px solid #444;
+        }
+
+        .generator button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            background: #c4a46c;
+            color: #1e1a1a;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .generator button:hover {
+            background: #d4af37;
+        }
+
+        .loading-container {
+            display: none;
+            margin: 20px auto;
+        }
+
+        .loading-text {
+            color: #c4a46c;
+            font-size: 1.5em;
+            margin-top: 10px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #1e1e2e;
+            border-top: 5px solid #c4a46c;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ghost-showcase {
+            margin: 50px 0;
+        }
+
+        .ghost-showcase h2 {
+            color: #c4a46c;
+        }
+
+        .ghost {
+            display: inline-block;
+            margin: 20px;
+            padding: 15px;
+            border: 2px solid #444;
+            border-radius: 10px;
+            background: #333;
+            color: #c4a46c;
+            text-align: left;
+            font-size: 1em;
+            white-space: pre;
+            overflow-x: auto;
+            position: relative;
+            width: 300px;
+        }
+
+        .ghost p {
+            margin: 5px 0;
+        }
+
+        .download-btn, .share-btn {
+            margin-top: 10px;
+            font-size: 1em;
+            padding: 8px 16px;
+            background: #c4a46c;
+            color: #1e1a1a;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+
+        .download-btn:hover, .share-btn:hover {
+            background: #d4af37;
+        }
+
+        .share-btn {
+            background: #1DA1F2; /* Twitter Blue */
+            color: #fff;
+        }
+
+        .share-btn:hover {
+            background: #40a9f3;
+        }
+
+        .info-section {
+            max-width: 800px;
+            margin: 50px auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: left;
+        }
+
+        .info-section h2 {
+            text-align: center;
+            color: #c4a46c;
+            margin-bottom: 20px;
+        }
+
+        /* Add a ghost emoji before "Ghost Lore & Myths" section title */
+        #ghost-lore h2::before {
+            content: "👻 ";
+        }
+
+        .info-section h3 {
+            color: #c4a46c;
+            margin-top: 30px;
+        }
+
+        .info-section p {
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .info-section ol {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            list-style: none;
+            padding: 0;
+        }
+
+        /* Add ghost icons to "How It Works" steps */
+        .info-section ol li::before {
+            content: "👻 ";
+            margin-right: 5px;
+        }
+
+        .lore-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .lore-item {
+            background: #444;
+            padding: 15px;
+            border-radius: 10px;
+            color: #f0dbc3;
+        }
+
+        .lore-item h4 {
+            margin-top: 0;
+            color: #c4a46c;
+        }
+
+        footer {
+            padding: 20px 0;
+            background: #0f0f1a;
+            color: #888;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 600px) {
+            .ghost {
+                width: 90%;
+            }
+
+            .generator input {
+                width: 80%;
+            }
+
+            .lore-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Adopt a Ghost</h1>
+        <p>Enter your Solana wallet address below and discover your spectral ghost companion!</p>
+        <div class="links">
+            <a href="#how-it-works">How It Works</a>
+            <a href="#ghost-lore">Ghost Lore & Myths</a>
+        </div>
+    </div>
+
+    <div class="generator">
+        <label for="wallet-address" style="display:none;">Wallet Address</label>
+        <input type="text" id="wallet-address" placeholder="Enter your Solana wallet address...">
+        <button id="generate-button">Summon My Ghost</button>
+    </div>
+
+    <div class="loading-container" id="loading-container">
+        <div class="spinner"></div>
+        <p class="loading-text">Calling Upon the Spirits...</p>
+    </div>
+
+    <div class="ghost-showcase" id="ghost-showcase">
+        <h2>Your Ghostly Companion</h2>
+        <!-- Generated ghost will appear here -->
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="info-section" id="how-it-works">
+        <h2>How It Works</h2>
+        <p>Each ghost is uniquely summoned from the wallet address you provide. Here's a simple breakdown:</p>
+        <ol>
+            <li><strong>Wallet Address Input:</strong> Enter your Solana wallet address above.</li>
+            <li><strong>Hashing Process:</strong> The address is converted into a numerical value using a special spectral hashing function.</li>
+            <li><strong>Attribute Assignment:</strong> This determines the ghost’s type, aura color, personality trait, accessory, and “haunt level.”</li>
+            <li><strong>Deterministic Results:</strong> The same wallet address always yields the same ghost, ensuring uniqueness.</li>
+        </ol>
+        <p>This approach blends eerie randomness with spectral consistency, giving you a unique digital ghost ally linked directly to your address.</p>
+    </div>
+
+    <!-- Ghost Lore & Myths Section -->
+    <div class="info-section" id="ghost-lore">
+        <h2>Ghost Lore & Myths</h2>
+        <p>In moonlit graveyards, abandoned halls, and mist-shrouded forests, ghosts drift silently through the veil. Each ghost emerges from lingering memories, taking on pale hues, ethereal forms, and mysterious auras as unique as the stories they carry.</p>
+
+        <p>Some ghosts wail softly under starlight, others guard old secrets in creaking mansions. Some bring gentle comfort, others stir mischief or fear. Below are known ghost archetypes—each with its own haunting whisper:</p>
+
+        <div class="lore-grid">
+            <div class="lore-item">
+                <h4>Whisper Wraith</h4>
+                <p>Softly speaking secrets of the past. Gentle, elusive, appearing as a faint echo in the moonlight.</p>
+            </div>
+            <div class="lore-item">
+                <h4>Frost Phantom</h4>
+                <p>Chilled apparitions of icy realms. Serene, quiet, drifting through silent winter nights.</p>
+            </div>
+            <div class="lore-item">
+                <h4>Storm Shade</h4>
+                <p>Crackling with distant thunder. Unpredictable, energetic, flitting through lightning-lit ruins.</p>
+            </div>
+            <div class="lore-item">
+                <h4>Mossy Spectre</h4>
+                <p>Greenish glow amid old forests. Nurturing, protective, spirit of ancient groves and roots.</p>
+            </div>
+            <div class="lore-item">
+                <h4>Umbral Haunt</h4>
+                <p>Shadowy and silent. Keeper of midnight corridors, revealing hidden truths to those who listen.</p>
+            </div>
+            <div class="lore-item">
+                <h4>Ethereal Elder</h4>
+                <p>Wise and timeless, shimmering with stardust. Philosophical, calm, guiding spirits across epochs.</p>
+            </div>
+            <div class="lore-item">
+                <h4>Crystal Echo</h4>
+                <p>Gleaming softly like distant chimes. Curious, reflective, drawn to glimmering halls and hidden gems.</p>
+            </div>
+            <div class="lore-item">
+                <h4>Dusk Drifter</h4>
+                <p>Appearing at twilight’s edge. Graceful, elusive, and forever dancing at the border of night.</p>
+            </div>
+            <div class="lore-item">
+                <h4>Moonlit Murmur</h4>
+                <p>Bathed in lunar glow, whispering lullabies. Dreamy, mystical, enchanting lonely travelers.</p>
+            </div>
+            <div class="lore-item">
+                <h4>Ashen Guardian</h4>
+                <p>Born of old embers, protecting quiet ashes. Steadfast, loyal, emerging where fires once burned.</p>
+            </div>
+        </div>
+
+        <h3>Rarity and Collectibility</h3>
+        <p>Among these ghosts lie subtle differences—rare aura hues, special spectral accessories, or unique wailing patterns. Some ghosts appear only when planets align, making them highly sought after by collectors. Keep exploring different addresses to discover legendary rarities!</p>
+    </div>
+
+    <footer>
+        © 2024 Adopt a Ghost | Echoes of Eternity Await
+    </footer>
+
+    <script>
+    (function() {
+        // DOM Elements
+        const walletInput = document.getElementById('wallet-address');
+        const generateButton = document.getElementById('generate-button');
+        const ghostShowcase = document.getElementById('ghost-showcase');
+        const loadingContainer = document.getElementById('loading-container');
+
+        // Ghost Generation Configuration
+        const GHOST_TYPES = [
+            {
+                type: 'Whisper Wraith',
+                traits: ['Gentle', 'Elusive', 'Soft-Spoken'],
+                art: `
+   .-.
+  (   )
+   \`-'
+  [Whisp]
+                `
+            },
+            {
+                type: 'Frost Phantom',
+                traits: ['Serene', 'Chilled', 'Tranquil'],
+                art: `
+   .-.
+  ( o )
+   \`-\`
+  [Frost]
+                `
+            },
+            {
+                type: 'Storm Shade',
+                traits: ['Energetic', 'Unpredictable', 'Crackling'],
+                art: `
+   .-.
+  ( O )
+   \`~\`
+ [Storm]
+                `
+            },
+            {
+                type: 'Mossy Spectre',
+                traits: ['Nurturing', 'Earthy', 'Greenish'],
+                art: `
+   .-.
+  ( ^ )
+   \`v\`
+ [Moss]
+                `
+            },
+            {
+                type: 'Umbral Haunt',
+                traits: ['Silent', 'Secretive', 'Shadowy'],
+                art: `
+   .-.
+  ( - )
+   \`#\`
+ [Shade]
+                `
+            },
+            {
+                type: 'Ethereal Elder',
+                traits: ['Wise', 'Ancient', 'Cosmic'],
+                art: `
+   .-.
+  ( * )
+   \`&\`
+ [Elder]
+                `
+            },
+            {
+                type: 'Crystal Echo',
+                traits: ['Curious', 'Reflective', 'Shimmering'],
+                art: `
+   .-.
+  ( o )
+   \`+\`
+[Crystal]
+                `
+            },
+            {
+                type: 'Dusk Drifter',
+                traits: ['Graceful', 'Nocturnal', 'Elusive'],
+                art: `
+   .-.
+  ( . )
+   \`^\`
+ [Dusk]
+                `
+            },
+            {
+                type: 'Moonlit Murmur',
+                traits: ['Dreamy', 'Mystical', 'Lulling'],
+                art: `
+   .-.
+  ( * )
+   \`°\`
+ [Moon]
+                `
+            },
+            {
+                type: 'Ashen Guardian',
+                traits: ['Steadfast', 'Loyal', 'Ember-Born'],
+                art: `
+   .-.
+  ( o )
+   \`X\`
+ [Ash]
+                `
+            }
+        ];
+
+        const AURAS = ['Pale-Blue', 'Soft-Green', 'Lavender-Tinted', 'Silvery-White', 'Amber-Glowing', 'Rose-Hued', 'Indigo-Shimmering', 'Azure-Fading', 'Crimson-Phasing', 'Opal-Twinkle'];
+        const ACCESSORIES = ['Candle Flame', 'Silver Bell', 'Haunted Locket', 'Wisp Lantern', 'Ectoplasm Jar', 'Spectral Key', 'Runic Amulet', 'Moon Shard', 'Glowing Crystal', 'Ancient Seal'];
+
+        // Wallet Address Validation
+        function validateWalletAddress(address) {
+            const solanaAddressRegex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+            return solanaAddressRegex.test(address);
+        }
+
+        // Advanced Hashing Function
+        function hashAddress(address) {
+            let hash = 0;
+            for (let i = 0; i < address.length; i++) {
+                const char = address.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32-bit integer
+            }
+            return Math.abs(hash);
+        }
+
+        // Ghost Generation
+        function generateGhost(hash) {
+            const typeIndex = hash % GHOST_TYPES.length;
+            const auraIndex = (hash >> 2) % AURAS.length;
+            const accessoryIndex = (hash >> 4) % ACCESSORIES.length;
+            const hauntLevel = (hash % 100) + 1;
+
+            const ghostType = GHOST_TYPES[typeIndex];
+
+            return {
+                type: ghostType.type,
+                aura: AURAS[auraIndex],
+                accessory: ACCESSORIES[accessoryIndex],
+                trait: ghostType.traits[hash % ghostType.traits.length],
+                hauntLevel: hauntLevel,
+                asciiArt: ghostType.art
+            };
+        }
+
+        // Show Loading
+        function showLoading() {
+            loadingContainer.style.display = 'block';
+            ghostShowcase.innerHTML = '<h2>Your Ghostly Companion</h2>';
+        }
+
+        // Hide Loading
+        function hideLoading() {
+            loadingContainer.style.display = 'none';
+        }
+
+        // Display Ghost
+        function displayGhost(ghost) {
+            const ghostCard = document.createElement('div');
+            ghostCard.className = 'ghost';
+            ghostCard.innerHTML = `
+${ghost.asciiArt}
+<p><strong>Type:</strong> ${ghost.type}</p>
+<p><strong>Aura:</strong> ${ghost.aura}</p>
+<p><strong>Trait:</strong> ${ghost.trait}</p>
+<p><strong>Accessory:</strong> ${ghost.accessory}</p>
+<p><strong>Haunt Level:</strong> ${ghost.hauntLevel}/100</p>
+            `;
+
+            // Download Button
+            const downloadButton = document.createElement('button');
+            downloadButton.className = 'download-btn';
+            downloadButton.textContent = 'Download Your Ghost';
+            downloadButton.addEventListener('click', () => downloadGhost(ghost));
+
+            // Share Button
+            const shareButton = document.createElement('button');
+            shareButton.className = 'share-btn';
+            shareButton.textContent = 'Share on X';
+            shareButton.addEventListener('click', () => shareOnX(ghost));
+
+            ghostCard.appendChild(downloadButton);
+            ghostCard.appendChild(shareButton);
+            ghostShowcase.appendChild(ghostCard);
+        }
+
+        // Download Ghost Details
+        function downloadGhost(ghost) {
+            const ghostDetails = `
+Ghost Companion Details:
+------------------------
+Type: ${ghost.type}
+Aura: ${ghost.aura}
+Trait: ${ghost.trait}
+Accessory: ${ghost.accessory}
+Haunt Level: ${ghost.hauntLevel}/100
+
+Ascii Art:
+${ghost.asciiArt}
+            `;
+
+            const blob = new Blob([ghostDetails], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${ghost.type}_Ghost.txt`;
+            link.click();
+        }
+
+        // Share on X
+        function shareOnX(ghost) {
+            const ghostDetails = `I just summoned a spectral companion! 👻✨
+
+Type: ${ghost.type}
+Aura: ${ghost.aura}
+Trait: ${ghost.trait}
+Accessory: ${ghost.accessory}
+Haunt Level: ${ghost.hauntLevel}/100
+
+Dare to join the realm of spirits? #AdoptaGhost #Spooky🌙
+
+@AdoptaGhost`;
+
+            const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(ghostDetails)}`;
+            window.open(tweetUrl, '_blank');
+        }
+
+        // Generate Button Event
+        generateButton.addEventListener('click', () => {
+            const walletAddress = walletInput.value.trim();
+
+            if (!validateWalletAddress(walletAddress)) {
+                alert('Please enter a valid Solana wallet address!');
+                return;
+            }
+
+            showLoading();
+
+            setTimeout(() => {
+                const hash = hashAddress(walletAddress);
+                const ghost = generateGhost(hash);
+
+                hideLoading();
+                displayGhost(ghost);
+            }, 2000);
+        });
+    })();
+    </script>
+</body>
+</html>
